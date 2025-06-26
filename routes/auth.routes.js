@@ -15,7 +15,7 @@ authRouter.post(
 );
 authRouter.post(
 	"/sign-out",
-	(req, res) => res.send({ message: "sign-out" }),
+	
 	signOut
 );
 
