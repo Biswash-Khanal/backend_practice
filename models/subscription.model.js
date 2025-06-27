@@ -1,4 +1,7 @@
 import mongoose from "mongoose";
+import User from "./user.model.js";
+
+
 
 const subscriptionSchema = new mongoose.Schema(
 	{
@@ -50,7 +53,7 @@ const subscriptionSchema = new mongoose.Schema(
 
 		status: {
 			type: String,
-			enum: ["active", "cancelled", "Expired"],
+			enum: ["active", "cancelled", "expired"],
 			default: "active",
 		},
 
@@ -65,7 +68,7 @@ const subscriptionSchema = new mongoose.Schema(
 
 		renewalDate: {
 			type: Date,
-			required: true,
+			
 			validate: {
 				validator: function (value) {
 					return value > this.startDate;
@@ -77,7 +80,7 @@ const subscriptionSchema = new mongoose.Schema(
 		user: {
 			type: mongoose.Schema.Types.ObjectId,
 			ref: "User",
-			requred: true,
+			required: true,
 			index: true,
 		},
 	},
@@ -85,7 +88,7 @@ const subscriptionSchema = new mongoose.Schema(
 );
 
 //auto calculate renewal date if missing
-subscriptionSchema.pre("save", function () {
+subscriptionSchema.pre("save", function (next) {
 	if (!this.renewalDate) {
 		const renewalPeriods = {
 			daily: 1,
@@ -110,6 +113,6 @@ subscriptionSchema.pre("save", function () {
 });
 
 const Subscription =
-	mongoose.models.Subscription || mongoose.model("Subscription", userSchema);
+	mongoose.models.Subscription || mongoose.model("Subscription", subscriptionSchema);
 
     export default Subscription;
